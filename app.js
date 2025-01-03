@@ -1,4 +1,5 @@
-// require('dotenv').config();
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -8,10 +9,10 @@ const helmet = require('helmet');
 const rateLimiter = require('./middlewares/rateLimit');
 const cors = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-// const error = require('./errors/error');
+const error = require('./errors/error');
 const router = require('./routes/index');
 
-const { PORT = 5000 } = process.env;
+const { PORT = 3000 } = process.env;
 const app = express();
 
 app.use(bodyParser.json());
@@ -20,14 +21,9 @@ app.use(cookieParser());
 app.use(cors);
 app.use(router);
 
-mongoose.connect('mongodb://127.0.0.1:27017/kassa2db', {
+mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb', {
   useNewUrlParser: true,
-})
-  .then(() => console.log('MongoDB conected'))
-  .catch(error => console.log(error));
-// mongoose.connect('mongodb://127.0.0.1:27017/kassa2db', {
-//   useNewUrlParser: true,
-// });
+});
 
 app.use(requestLogger);
 app.use(rateLimiter);
@@ -35,6 +31,6 @@ app.use(rateLimiter);
 app.use(errorLogger);
 app.use(errors());
 
-//app.use(error);
+app.use(error);
 
 app.listen(PORT);
